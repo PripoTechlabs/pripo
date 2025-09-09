@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { motion, useInView, animate } from "framer-motion"
+import { motion, useInView, animate, type Variants } from "framer-motion"
 import {
   Shield,
   Target,
@@ -25,7 +25,7 @@ export default function WhyChooseSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(sectionRef, { once: false, amount: 0.1 })
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -36,13 +36,17 @@ export default function WhyChooseSection() {
     },
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 30, opacity: 0 },
-    visible: {
+    visible: (i: number = 0) => ({
       y: 0,
       opacity: 1,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
+      transition: { 
+        duration: 0.6, 
+        ease: [0.16, 1, 0.3, 1],
+        delay: i * 0.1
+      },
+    }),
   }
 
   const differentiators = [
@@ -274,14 +278,18 @@ function AnimatedIcons({ icons }: { icons: AnimatedCardProps["icons"] }) {
     `.circle-${index + 1}`,
     { scale, transform },
     { duration: 0.8 },
-  ]) || []
+  ]).flat() || []
 
   useEffect(() => {
     if (sequence.length > 0) {
-      animate(sequence, {
+      const animation = animate(sequence, {
         repeat: Number.POSITIVE_INFINITY,
         repeatDelay: 2,
-      })
+      } as any);
+
+      return () => {
+        animation.stop();
+      };
     }
   }, [sequence])
 

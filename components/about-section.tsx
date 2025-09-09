@@ -18,7 +18,7 @@ import {
   ArrowRight,
   Zap,
 } from "lucide-react"
-import { motion, useScroll, useTransform, useInView, useSpring } from "framer-motion"
+import { motion, useScroll, useTransform, useInView, useSpring, type Variants } from "framer-motion"
 
 export default function AboutSection() {
   const [isVisible, setIsVisible] = useState(false)
@@ -53,13 +53,17 @@ export default function AboutSection() {
     },
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
-    visible: {
+    visible: (i: number = 0) => ({
       y: 0,
       opacity: 1,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
+      transition: { 
+        duration: 0.6, 
+        ease: [0.16, 1, 0.3, 1],
+        delay: i * 0.1
+      },
+    }),
   }
 
   const services = [
@@ -362,10 +366,7 @@ interface ServiceItemProps {
   secondaryIcon?: React.ReactNode
   title: string
   description: string
-  variants: {
-    hidden: { opacity: number; y?: number }
-    visible: { opacity: number; y?: number; transition: { duration: number; ease: string } }
-  }
+  variants: Variants
   delay: number
   direction: "left" | "right"
 }
@@ -425,8 +426,8 @@ interface StatCounterProps {
 }
 
 function StatCounter({ icon, value, label, suffix, delay }: StatCounterProps) {
-  const countRef = useRef(null)
-  const isInView = useInView(countRef, { once: false })
+  const countRef = useRef<HTMLDivElement>(null)
+  const isInView = useInView(countRef, { once: true })
   const [hasAnimated, setHasAnimated] = useState(false)
 
   const springValue = useSpring(0, {
@@ -438,9 +439,6 @@ function StatCounter({ icon, value, label, suffix, delay }: StatCounterProps) {
     if (isInView && !hasAnimated) {
       springValue.set(value)
       setHasAnimated(true)
-    } else if (!isInView && hasAnimated) {
-      springValue.set(0)
-      setHasAnimated(false)
     }
   }, [isInView, value, springValue, hasAnimated])
 
@@ -449,6 +447,8 @@ function StatCounter({ icon, value, label, suffix, delay }: StatCounterProps) {
   return (
     <motion.div
       className="bg-card/50 backdrop-blur-sm p-6 rounded-xl flex flex-col items-center text-center group hover:bg-card transition-colors duration-300 border"
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
       variants={{
         hidden: { opacity: 0, y: 20 },
         visible: {
@@ -456,7 +456,7 @@ function StatCounter({ icon, value, label, suffix, delay }: StatCounterProps) {
           y: 0,
           transition: { duration: 0.6, delay },
         },
-      }}
+      } as Variants}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
     >
       <motion.div
