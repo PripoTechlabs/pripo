@@ -270,63 +270,65 @@ function AnimatedCard({ className, title, description, icons = [] }: AnimatedCar
   )
 }
 
-function AnimatedIcons({ icons }: { icons: AnimatedCardProps["icons"] }) {
-  const scale = [1, 1.1, 1]
-  const transform = ["translateY(0px)", "translateY(-4px)", "translateY(0px)"]
-  
-  const sequence = icons?.map((_, index) => [
-    `.circle-${index + 1}`,
-    { scale, transform },
-    { duration: 0.8 },
-  ]).flat() || []
+function AnimatedIcons({ icons = [] }: { icons: AnimatedCardProps["icons"] }) {
+  const scale = [1, 1.1, 1];
+  const transform = ["translateY(0px)", "translateY(-4px)", "translateY(0px)"];
+  const iconRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    if (sequence.length > 0) {
-      const animation = animate(sequence, {
-        repeat: Number.POSITIVE_INFINITY,
-        repeatDelay: 2,
-      } as any);
+    if (!icons || icons.length === 0) return;
 
-      return () => {
-        animation.stop();
-      };
-    }
-  }, [sequence])
+    const animations = icons.map((_, index) => {
+      const element = iconRefs.current[index];
+      if (!element) return null;
+      
+      return animate(
+        element,
+        { 
+          scale,
+          transform,
+        },
+        { 
+          duration: 0.8,
+          repeat: Number.POSITIVE_INFINITY,
+          repeatDelay: 2,
+          ease: "easeInOut"
+        }
+      );
+    }).filter(Boolean);
+
+    return () => {
+      animations.forEach(anim => anim?.stop());
+    };
+  }, [icons.length]);
 
   return (
     <div className="p-6 overflow-hidden h-full relative flex items-center justify-center">
       <div className="flex flex-row flex-shrink-0 justify-center items-center gap-3">
-        {icons?.map((icon, index) => (
-          <Container
+        {icons.map((icon, index) => (
+          <div
             key={index}
+            ref={el => {
+              if (el) iconRefs.current[index] = el;
+            }}
             className={cn(
-              sizeMap[icon.size || "lg"],
-              `circle-${index + 1}`,
-              icon.className
+              "relative flex items-center justify-center rounded-full bg-primary/10 p-2 transition-all duration-300 hover:bg-primary/20",
+              {
+                "h-12 w-12": !icon.size || icon.size === "md",
+                "h-10 w-10": icon.size === "sm",
+                "h-16 w-16": icon.size === "lg",
+                [icon.className || '']: true
+              }
             )}
           >
             {icon.icon}
-          </Container>
+          </div>
         ))}
       </div>
       <AnimatedSparkles />
     </div>
-  )
+  );
 }
-
-const Container = ({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn(
-      `rounded-full flex items-center justify-center bg-primary/10 text-primary
-      shadow-[0px_0px_8px_0px_rgba(var(--primary),0.25)_inset,0px_32px_24px_-16px_rgba(0,0,0,0.10)]
-      hover:bg-primary/20 transition-colors duration-300`,
-      className
-    )}
-    {...props}
-  >
-    {children}
-  </div>
-)
 
 const AnimatedSparkles = () => (
   <div className="h-32 w-px absolute top-16 m-auto z-40 bg-gradient-to-b from-transparent via-primary/50 to-transparent animate-pulse">
