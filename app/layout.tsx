@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
+import SplashCursor from '@/components/ui/cursor'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pripo - Building Smarter Businesses with Technology That Lasts",
+  title: "Pripo Techlabs",
   description: "Empowering organizations with precision-engineered software solutions that drive efficiency, foster innovation, and create measurable business impact.",
   keywords: [
     "software solutions",
@@ -62,12 +63,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Analytics />
         <SpeedInsights />
+        
+<SplashCursor />
         {children}
       </body>
     </html>

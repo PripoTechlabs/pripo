@@ -318,7 +318,7 @@ export default function AboutSection() {
         </div>
 
         {/* Stats Section */}
-        <motion.div
+        {/* <motion.div
           ref={statsRef}
           className="mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
           initial="hidden"
@@ -335,7 +335,7 @@ export default function AboutSection() {
               delay={index * 0.1}
             />
           ))}
-        </motion.div>
+        </motion.div> */}
 
         {/* CTA Section */}
         <motion.div

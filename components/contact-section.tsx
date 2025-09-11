@@ -144,10 +144,10 @@ export function ContactSection() {
                     <div>
                       <p className="font-medium">Email</p>
                       <a 
-                        href="mailto:contact@pripotech.com" 
+                        href="mailto:admin@pripo.in" 
                         className="text-sm text-muted-foreground hover:text-primary transition-colors"
                       >
-                        contact@pripotech.com
+                        admin@pripo.in
                       </a>
                     </div>
                   </motion.div>
@@ -157,10 +157,10 @@ export function ContactSection() {
                     <div>
                       <p className="font-medium">Phone</p>
                       <a 
-                        href="tel:+1234567890" 
+                        href="tel:+8248216126" 
                         className="text-sm text-muted-foreground hover:text-primary transition-colors"
                       >
-                        +1 (234) 567-890
+                        +91 8248216126
                       </a>
                     </div>
                   </motion.div>
@@ -170,7 +170,7 @@ export function ContactSection() {
                     <div>
                       <p className="font-medium">Office</p>
                       <p className="text-sm text-muted-foreground">
-                        123 Tech Park, Bangalore, India
+                        Puducherry, India
                       </p>
                     </div>
                   </motion.div>

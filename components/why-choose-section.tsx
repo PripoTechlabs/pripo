@@ -116,6 +116,7 @@ export default function WhyChooseSection() {
     <section
       id="why-choose-section"
       ref={sectionRef}
+      suppressHydrationWarning
       className="w-full py-24 px-4 bg-gradient-to-b from-secondary/10 to-background overflow-hidden relative"
     >
       {/* Background decorative elements */}
