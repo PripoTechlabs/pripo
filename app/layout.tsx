@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
+import { ConsentManagerProvider, CookieBanner, ConsentManagerDialog } from "@c15t/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -63,15 +64,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Analytics />
-        <SpeedInsights />
-        <SmoothCursor />
-        {children}
-      </body>
-    </html>
-  );
+        <html lang="en" className="dark" suppressHydrationWarning>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+    		<ConsentManagerProvider options={{
+    				mode: 'offline',
+    				consentCategories: ['necessary', 'marketing'], // Optional: Specify which consent categories to show in the banner. 
+    			}}>
+    			<CookieBanner />
+    			<ConsentManagerDialog />
+    			
+            <Analytics />
+            <SpeedInsights />
+            <SmoothCursor />
+            {children}
+          
+    		</ConsentManagerProvider>
+    	</body>
+        </html>
+      )
 }
